@@ -1,0 +1,38 @@
+<!-- Jumbotron Header -->
+<header class="jumbotron hero-spacer">
+    <h1>
+        <%= __('title') %>
+    </h1>
+    <p>
+        <%= __('description') %>
+    </p>
+</header>
+
+<div class="row mb-3">
+    <div class="col-lg-12">
+        <h3>
+            آخرین دوره ها
+        </h3>
+    </div>
+</div>
+<div class="row mb-4">
+    <% courses.forEach(course => { %>
+        <div class="col-6 col-md-3">
+            <div class="card">
+                <img class="card-img-top"
+                     src="<%= course.thumb %>"
+                     alt="<%= course.title %>">
+                <div class="card-body">
+                    <h3><a href="<%= course.path() %>"><%= course.title %></a></h3>
+                    <p class="card-text"><%- course.body.substr(0, 100) %></p>
+                    <a href="<%= course.path() %>" class="btn btn-primary btn-sm">
+                        اطلاعات بیشتر
+                    </a>
+                </div>
+                <div class="card-footer text-muted">
+                    <%= course.viewCount %> بازدید
+                </div>
+            </div>
+        </div>
+    <% }) %>
+</div>

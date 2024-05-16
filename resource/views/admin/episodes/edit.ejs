@@ -1,0 +1,115 @@
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>ویرایش ویدیو</h2>
+</div>
+<form class="form-horizontal"
+      action="/admin/episodes/<%= episode._id %>?_method=put"
+      method="post">
+
+    <%- include(viewPath('layouts/error-messages')) -%>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="title" class="control-label font-weight-bold">
+                عنوان ویدیو
+            </label>
+            <input type="text" class="form-control"
+                   name="title" id="title"
+                   placeholder="عنوان را وارد کنید"
+                   value="<%= old('title', episode.title) %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="course"
+                   class="control-label font-weight-bold font-weight-bold">
+                دوره مربوطه
+            </label>
+            <select name="course" id="course" class="form-control">
+                <% courses.forEach(course => { %>
+                    <option value="<%= course._id %>"
+                            <%= String(old('course', episode.course)) == String(course._id)
+                                    ? 'selected' : '' %>>
+                        <%= course.title %>
+                    </option>
+                <%}) %>
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="time" class="control-label font-weight-bold">
+                زمان ویدیو
+            </label>
+            <input type="text" class="form-control"
+                   name="time" id="time"
+                   placeholder="زمان را وارد کنید"
+                   value="<%= old('time', episode.time) %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="videoUrl" class="control-label font-weight-bold">
+                لینک ویدیو
+            </label>
+            <input type="text" class="form-control"
+                   style="direction: ltr;"
+                   name="videoUrl" id="videoUrl"
+                   placeholder="لینک را وارد کنید"
+                   value="<%= old('videoUrl', episode.videoUrl) %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="body" class="control-label font-weight-bold">
+                متن
+            </label>
+            <textarea rows="5" class="form-control"
+                      name="body" id="body"
+                      placeholder="متن مقاله را وارد کنید"
+            ><%= old('body', episode.body) %></textarea>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="type" class="control-label font-weight-bold font-weight-bold">
+                نوع دوره
+            </label>
+            <select name="type" id="type" class="form-control">
+                <option value="vip" <%= old('type', episode.type) === 'vip'
+                        ? 'selected' : '' %>>
+                    اعضای ویژه
+                </option>
+                <option value="cash" <%= old('type', episode.type) === 'cash'
+                        ? 'selected' : '' %>>
+                    نقدی
+                </option>
+                <option value="free"
+                        <%= old('type', episode.type) === 'free'
+                        || old('type', episode.type) == '' ? 'selected' : '' %>>
+                    رایگان
+                </option>
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="number" class="control-label font-weight-bold">
+                شماره جلسه
+            </label>
+            <input type="text" class="form-control"
+                   name="number" id="number"
+                   placeholder="شماره جلسه را وارد کنید"
+                   value="<%= old('number', episode.number) %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-info">
+                ویرایش
+            </button>
+        </div>
+    </div>
+</form>

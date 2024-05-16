@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>کاربران</h2>
+    <div class="btn-group">
+        <a href="/admin/users/roles" class="btn btn-sm btn-primary">
+            سطح دسترسی
+        </a>
+        <a href="/admin/users/create" class="btn btn-sm btn-danger">
+            ایجاد کاربر جدید
+        </a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>نام کاربر</th>
+            <th>ایمیل</th>
+            <th>تاریخ عضویت</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% users.docs.forEach(user => { %>
+            <tr>
+                <td>
+                    <a href="#">
+                        <%= user.name %>
+                    </a>
+                </td>
+                <td>
+                    <%= user.email %>
+                </td>
+                <td>
+                    <%= date(user.createdAt).fromNow() %>
+                </td>
+                <td>
+                    <form action="/admin/users/<%= user._id %>?_method=DELETE"
+                          method="post">
+                        <div class="btn-group btn-group-sm">
+                            <a href="/admin/users/<%= user._id %>/toggle_admin"
+                               class="btn btn-info">
+                                <%= user.admin ? 'لغو مدیریت'
+                                        : 'ارتقا به مدیر' %>
+                            </a>
+                            <% if (user.admin) { %>
+                                <a href="/admin/users/<%= user._id %>/add_role"
+                                   class="btn btn-success">
+                                    اعمال سطح دسترسی
+                                </a>
+                            <% } %>
+                            <button type="submit" class="btn btn-danger">حذف</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+
+    <%- include(viewPath('layouts/pagination'),
+    {
+    pagination : users
+    }) %>
+
+</div>
+

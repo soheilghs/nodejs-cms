@@ -1,0 +1,217 @@
+<div class="row">
+    <!-- Blog Post Content Column -->
+    <div class="col-lg-8">
+        <!-- Title -->
+        <h1 class="mb-3"><%= course.title %></h1>
+
+        <!-- Author -->
+        <p class="text-muted small">
+            <span>
+                توسط
+                <a href="#"><%= course.user.name %></a>
+            </span>
+            -
+            <span>
+                <%= date(course.createdAt).format('jD jMMMM jYYYY') %>
+            </span>
+        </p>
+
+        <hr>
+        <!-- Post Content -->
+        <div id="content">
+            <%- course.body %>
+        </div>
+        <hr>
+
+        <% if(auth.check) { %>
+            <% if(course.type == 'vip') { %>
+                <% if(!auth.user.isVip()) { %>
+                    <div class="alert alert-danger">
+                        برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید
+                    </div>
+                <% } else { %>
+                    <div class="alert alert-success">
+                        شما عضو ویژه هستید.
+                        بنابراین می توانید از این دوره استفاده کنید
+                    </div>
+                <% } %>
+            <% } else if(course.type == 'cash') { %>
+                <% if(!auth.user.checkLearning(course.id)) { %>
+                    <div class="alert alert-danger">
+                        برای مشاهده این دوره نیاز است به صورت نقدی دوره را تهیه کنید
+                    </div>
+                <% } else { %>
+                    <div class="alert alert-success">
+                        شما در این دوره ثبت نام کرده اید
+                    </div>
+                <% } %>
+            <% } %>
+        <% } else { %>
+            <div class="alert alert-danger">
+                برای مشاهده این دوره نیاز است ابتدا وارد سایت شوید
+            </div>
+        <% } %>
+
+        <h3>قسمت های دوره</h3>
+        <table class="table table-condensed table-bordered">
+            <thead>
+            <tr>
+                <th>شماره قسمت</th>
+                <th>عنوان قسمت</th>
+                <th>زمان قسمت</th>
+                <th>دانلود</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% course.episodes.forEach(episode => { %>
+                <tr>
+                    <th>
+                        <a href="">
+                            <%= episode.number %>
+                        </a>
+                    </th>
+                    <td><%= episode.title %></td>
+                    <td><%= episode.time %></td>
+                    <td>
+                        <a href="<%= episode.download(req) %>">
+                            دانلود
+                        </a>
+                    </td>
+                </tr>
+            <% }) %>
+
+            </tbody>
+        </table>
+
+        <!-- Blog Comments -->
+        <hr>
+
+        <%- include(viewPath('layouts/comments'),
+        {
+        subject: course,
+        comments: course.comments
+        }) -%>
+
+    </div>
+
+    <!-- Blog Sidebar Widgets Column -->
+    <div class="col-md-4">
+
+        <% if(auth.check) { %>
+            <% if(course.type == 'vip') { %>
+                <% if(!auth.user.isVip()) { %>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <a href="">
+                                برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید
+                            </a>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <p>
+                                شما عضو ویژه هستید.
+                                بنابراین می توانید از این دوره استفاده کنید
+                            </p>
+                        </div>
+                    </div>
+                <% } %>
+            <% } else if(course.type == 'cash') { %>
+                <% if(!auth.user.checkLearning(course.id)) { %>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <p>
+                                برای استفاده از این دوره نیاز است
+                                این دوره را با مبلغ
+                                <%= course.price %>
+                                تومان خریداری کنید
+                            </p>
+                            <form action="/courses/payment" method="post">
+                                <input type="hidden" name="course"
+                                       value="<%= course.id %>">
+                                <button type="submit" class="btn btn-success">
+                                    خرید دوره
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <p>
+                                شما در این دوره ثبت نام کرده اید
+                            </p>
+                        </div>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <div class="card my-4">
+                    <div class="card-body">
+                        <p>
+                            این دوره رایگان است.
+                        </p>
+                    </div>
+                </div>
+            <% } %>
+        <% } else { %>
+            <div class="card my-4">
+                <div class="card-body">
+                    <a href="/auth/login">
+                        برای مشاهده این دوره نیاز است ابتدا وارد سایت شوید
+                    </a>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Search Widget -->
+        <div class="card my-4">
+            <h5 class="card-header">جستجو</h5>
+            <div class="card-body">
+                <form class="input-group" action="/courses" method="get">
+                    <input type="text" class="form-control"
+                           name="search"
+                           placeholder="دنبال چی میگردی؟">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary"
+                                type="submit">
+                            جستجو!
+                        </button>
+                    </span>
+                </form>
+            </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="card my-4">
+            <h5 class="card-header">دسته بندی ها</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <ul class="list-unstyled pr-0">
+                            <% categories.forEach(category => { %>
+                                <li class="mb-2">
+                                    <a href="/courses?cat=<%= category.slug %>">
+                                        <%= category.name %>
+                                    </a>
+                                    <% if (category.children) { %>
+                                        <ul>
+                                            <% category.children.forEach(child => { %>
+                                                <li class="mt-2 mb-2">
+                                                    <a href="/courses?cat=<%= child.slug %>">
+                                                        <%= child.name %>
+                                                    </a>
+                                                </li>
+                                            <% }) %>
+                                        </ul>
+                                    <% } %>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

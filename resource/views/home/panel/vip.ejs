@@ -1,0 +1,21 @@
+<%- include(viewPath('home/panel/head')) -%>
+
+<div class="mt-4">
+    <form action="/user/panel/vip/payment" method="post">
+        <select name="plan" id="plan"
+                class="form-control w-25">
+            <option value="1">
+                عضویت ویژه 1 ماهه 10000
+            </option>
+            <option value="3">
+                عضویت ویژه 3 ماهه 30000
+            </option>
+            <option value="12">
+                عضویت ویژه 12 ماهه 90000
+            </option>
+        </select>
+        <button type="submit" class="btn btn-danger mt-2">
+            افزایش اعتبار
+        </button>
+    </form>
+</div>

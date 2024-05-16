@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>دوره ها</h2>
+    <div class="btn-group">
+        <a href="/admin/courses/create" class="btn btn-sm btn-primary">ایجاد دوره جدید</a>
+        <a href="/admin/episodes" class="btn btn-sm btn-danger">بخش ویدیوها</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>عنوان دوره</th>
+            <th>تعداد نظرات</th>
+            <th>مقدار بازدید</th>
+            <th>وضعیت دوره</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% courses.docs.forEach(course => { %>
+            <tr>
+                <td>
+                    <a href="/courses/آپدیت-جدید">
+                        <%= course.title %>
+                    </a>
+                </td>
+                <td>
+                    <%= course.commentCount %>
+                </td>
+                <td>
+                    <%= course.viewCount %>
+                </td>
+                <td>
+                    <%= course.typeToPersian() %>
+                </td>
+                <td>
+                    <form action="/admin/courses/<%= course._id %>?_method=DELETE"
+                          method="post">
+                        <div class="btn-group btn-group-sm">
+                            <a href="/admin/courses/<%= course._id %>/edit"
+                               class="btn btn-primary">
+                                ویرایش
+                            </a>
+                            <button type="submit" class="btn btn-danger">حذف</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+
+    <%- include(viewPath('layouts/pagination'),
+        {
+           pagination : courses
+        }) %>
+
+</div>
+

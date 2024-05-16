@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>لیست سطوح دسترسی</h2>
+    <div class="btn-group">
+        <a href="/admin/users/roles/create"
+           class="btn btn-sm btn-danger">
+            افزودن سطح دسترسی جدید
+        </a>
+        <a href="/admin/users/permissions"
+           class="btn btn-sm btn-info">
+            بخش اجازه دسترسی
+        </a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>عنوان سطح</th>
+            <th>توضیح</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% roles.docs.forEach(role => { %>
+            <tr>
+                <td>
+                    <a href="#">
+                        <%= role.name %>
+                    </a>
+                </td>
+                <td>
+                    <%= role.label %>
+                </td>
+                <td>
+                    <form action="/admin/users/roles/<%= role._id %>?_method=DELETE"
+                          method="post">
+                        <div class="btn-group btn-group-sm">
+                            <a href="/admin/users/roles/<%= role._id %>/edit"
+                               class="btn btn-primary">
+                                ویرایش
+                            </a>
+                            <button type="submit" class="btn btn-danger">حذف</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+
+    <%- include(viewPath('layouts/pagination'),
+      {
+        pagination : roles
+      }) %>
+
+</div>
+

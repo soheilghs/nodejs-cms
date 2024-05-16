@@ -1,0 +1,22 @@
+<%- include(viewPath('home/panel/head')) -%>
+
+<ul style="margin: 20px">
+    <li>
+        <b>نام کاربری</b> : <%= auth.user.name %>
+    </li>
+    <li>
+        <b>ایمیل کاربری</b> : <%= auth.user.email %>
+    </li>
+    <% if (auth.user.isVip()) { %>
+        <li>
+            <b>زمان پایان اعتبار ویژه</b>
+            :
+            <%= date(auth.user.vipTime).fromNow() %>
+            آینده
+        </li>
+    <% } else { %>
+        <li>
+            <b>زمان عضویت ویژه شما به پایان رسیده است</b>
+        </li>
+    <% } %>
+</ul>

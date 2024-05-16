@@ -1,0 +1,28 @@
+<div class="jumbotron">
+    <h1>پنل کاربری</h1>
+    <p>
+        شما در اینجا می توانید اطلاعات کاربری خود
+        در وب سایت را ویرایش و یا مشاهده کنید
+    </p>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link <%= req.url == '/user/panel' ? 'active' : ''  %>"
+           href="/user/panel">
+            اطلاعات کاربری
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= req.url == '/user/panel/history' ? 'active' : ''  %>"
+           href="/user/panel/history">
+            پرداخت های انجام شده
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= req.url == '/user/panel/vip' ? 'active' : ''  %>"
+           href="/user/panel/vip">
+            شارژ vip
+        </a>
+    </li>
+</ul>
