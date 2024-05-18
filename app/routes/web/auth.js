@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require("passport");
+const csrf = require("csurf");
 
 // Controllers
 const LoginController =
@@ -12,6 +13,9 @@ const ForgetPasswordController =
 const ResetPasswordController =
   require('app/http/controllers/auth/ResetPasswordController');
 
+// Middlewares
+const csrfErrorHandler =
+  require("app/http/middleware/csrfErrorHandler");
 
 //validators
 const RegisterValidator =
@@ -22,6 +26,9 @@ const ForgetPasswordValidator =
   require('app/http/validators/ForgetPasswordValidator');
 const ResetPasswordValidator =
   require('app/http/validators/ResetPasswordValidator');
+
+router.use(csrf({cookie: true}));
+router.use(csrfErrorHandler.handle);
 
 router.get('/login',
   LoginController.showLoginForm);

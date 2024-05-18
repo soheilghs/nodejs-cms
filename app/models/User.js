@@ -22,18 +22,10 @@ const userSchema = Schema({
     toJSON: {virtuals: true}
 });
 
-userSchema.pre('save', function (next) {
+userSchema.methods.hashPassword = function (password) {
   let salt = bcrypt.genSaltSync(8);
-  this.password = bcrypt.hashSync(this.password, salt);
-  next();
-});
-
-userSchema.pre('findOneAndUpdate', function (next) {
-  let salt = bcrypt.genSaltSync(8);
-  let password = this.getUpdate().$set.password;
-  this.getUpdate().$set.password = bcrypt.hashSync(password, salt);
-  next();
-});
+  return bcrypt.hashSync(password, salt);
+}
 
 userSchema.plugin(mongoosePaginate);
 

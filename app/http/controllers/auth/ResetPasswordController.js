@@ -46,13 +46,15 @@ class ResetPasswordController extends Controller {
       return this.back(req, res);
     }
 
-    let user = await User.findOneAndUpdate({
+    let user = await User.findOne({
       email: field.email
-    }, {
-      $set: {
-        password: req.body.password
-      }
     });
+
+    user.$set({
+      password: user.hashPassword(req.body.password)
+    });
+
+    await user.save();
 
     if (!user) {
       req.flash('errors', 'بروز رسانی انجام نشد');
