@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const csrf = require("csurf");
 
 // Validators
 const CourseValidator =
@@ -40,6 +41,8 @@ const PermissionController =
   require('app/http/controllers/admin/PermissionController');
 const RoleController =
   require('app/http/controllers/admin/RoleController');
+const csrfErrorHandler =
+  require("app/http/middleware/csrfErrorHandler");
 
 router.use((req,
             res,
@@ -47,6 +50,9 @@ router.use((req,
   res.locals.layout = "admin/master";
   next();
 });
+
+router.use(csrf({cookie: true}));
+router.use(csrfErrorHandler.handle);
 
 //Admin Routes
 router.get('/', AdminController.index);

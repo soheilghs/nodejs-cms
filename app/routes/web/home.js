@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const csrf = require("csurf");
 
 // Controllers
 const HomeController =
@@ -21,6 +22,8 @@ const convertFileToField =
 
 // Helpers
 const upload = require('app/helpers/UploadImage');
+const csrfErrorHandler =
+  require("app/http/middleware/csrfErrorHandler");
 
 router.get('/logout', (req,
                        res) => {
@@ -29,6 +32,9 @@ router.get('/logout', (req,
     res.redirect('/');
   });
 });
+
+router.use(csrf({cookie: true}));
+router.use(csrfErrorHandler.handle);
 
 //Home Routes
 router.get('/', HomeController.index);
