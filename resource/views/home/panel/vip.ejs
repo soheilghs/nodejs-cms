@@ -2,6 +2,10 @@
 
 <div class="mt-4">
     <form action="/user/panel/vip/payment" method="post">
+
+        <input type="hidden" name="_csrf"
+               value="<%= req.csrfToken() %>">
+
         <select name="plan" id="plan"
                 class="form-control w-25">
             <option value="1">

@@ -3,6 +3,7 @@ const session = require("express-session");
 const MongoStore = require('connect-mongo')(session);
 
 module.exports = {
+  name: 'session_netsource',
   secret: process.env.SESSION_SECRETKEY,
   resave: true,
   saveUninitialized: true,

@@ -1,7 +1,8 @@
 const Controller = require('app/http/controllers/Controller');
 const Payment = require('app/models/Payment');
-const Course = require("../../models/Course");
 const rp = require("request-promise");
+const ActivationCode =
+  require('app/models/ActivationCode');
 
 class UserController extends Controller {
 
@@ -9,6 +10,74 @@ class UserController extends Controller {
     try {
       res.render('home/panel/index', {
         title: 'پنل کاربری'
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async activation(req, res, next) {
+    try {
+      let activationCode =
+        await ActivationCode.findOne({
+          code: req.params.code
+        }).populate('user').exec();
+
+      if (!activationCode) {
+        this.alert(req, {
+          title: 'دقت کنید',
+          message: 'چنین لینکی برای فعال سازی وجود ندارد',
+          button: 'بسیار خب',
+          type: 'error'
+        });
+
+        return res.redirect('/');
+      }
+
+      if (activationCode.expire < new Date()) {
+        this.alert(req, {
+          title: 'دقت کنید',
+          message: 'مهلت استفاده از این لینک به پایان رسیده است',
+          button: 'بسیار خب',
+          type: 'error'
+        });
+
+        return res.redirect('/');
+      }
+
+      if (activationCode.used) {
+        this.alert(req, {
+          title: 'دقت کنید',
+          message: 'این لینک قبلا مورد استفاده قرار گرفته است',
+          button: 'بسیار خب',
+          type: 'error'
+        });
+
+        return res.redirect('/');
+      }
+
+      let user = activationCode.user;
+      user.$set({
+        active: true
+      });
+      activationCode.$set({
+        used: true
+      });
+
+      await user.save();
+      await activationCode.save();
+
+      req.login(user, err => {
+        user.setRememberToken(res);
+
+        this.alert(req, {
+          title: 'با تشکر',
+          message: 'اکانت شما فعال شد',
+          type: 'success',
+          button: 'بسیار خب'
+        });
+
+        return res.redirect('/');
       });
     } catch (err) {
       next(err);

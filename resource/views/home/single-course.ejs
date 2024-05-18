@@ -74,7 +74,7 @@
                     <td><%= episode.title %></td>
                     <td><%= episode.time %></td>
                     <td>
-                        <a href="<%= episode.download(req) %>">
+                        <a href="<%= episode.download(req.isAuthenticated(), req.user) %>">
                             دانلود
                         </a>
                     </td>
@@ -129,6 +129,8 @@
                                 تومان خریداری کنید
                             </p>
                             <form action="/courses/payment" method="post">
+                                <input type="hidden" name="_csrf"
+                                       value="<%= req.csrfToken() %>">
                                 <input type="hidden" name="course"
                                        value="<%= course.id %>">
                                 <button type="submit" class="btn btn-success">
@@ -170,6 +172,8 @@
             <h5 class="card-header">جستجو</h5>
             <div class="card-body">
                 <form class="input-group" action="/courses" method="get">
+                    <input type="hidden" name="_csrf"
+                           value="<%= req.csrfToken() %>">
                     <input type="text" class="form-control"
                            name="search"
                            placeholder="دنبال چی میگردی؟">

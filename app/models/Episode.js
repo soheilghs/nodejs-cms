@@ -29,8 +29,8 @@ EpisodeSchema.methods.typeToPersian = function () {
   }
 }
 
-EpisodeSchema.methods.download = function (req) {
-  if (!req.isAuthenticated) {
+EpisodeSchema.methods.download = function (check, user) {
+  if (!check) {
     return '#';
   }
 
@@ -40,17 +40,17 @@ EpisodeSchema.methods.download = function (req) {
       status = true;
       break;
     case 'vip':
-      status = req.user.isVip()
+      status = user.isVip()
       break;
     case 'cash':
-      status = req.user.checkLearning(this.course);
+      status = user.checkLearning(this.course);
       break;
   }
 
   let timestamps = new Date().getTime() + 3600 * 1000 * 12;
   let text = `aQTR@!#Fa#%!@%SDQGGASDF${this.id}${timestamps}`;
 
-  let salt = bcrypt.genSaltSync(15);
+  let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(text, salt);
 
   return status ? `/download/${this.id}?mac=${hash}&t=${timestamps}` : '#';

@@ -56,6 +56,7 @@ router.post('/user/panel/vip/payment',
   UserController.vipPayment);
 router.get('/user/panel/vip/payment/check',
   UserController.vipCheckPayment);
+router.get('/user/activation/:code', UserController.activation);
 
 router.get('/sitemap.xml', HomeController.sitemap);
 router.get('/feed/courses', HomeController.coursesFeed);

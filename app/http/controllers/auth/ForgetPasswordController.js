@@ -1,8 +1,8 @@
 const Controller = require('app/http/controllers/Controller');
-const passport = require('passport');
 const PasswordReset = require('app/models/PasswordReset');
 const User = require('app/models/User');
 const uniqueString = require('unique-string');
+const mail = require('app/helpers/mail');
 
 class ForgetPasswordController extends Controller {
 
@@ -40,7 +40,36 @@ class ForgetPasswordController extends Controller {
 
     await newPasswordReset.save();
 
-    // Send Mail
+
+    let mailOptions = {
+      from: '"مجله آموزشی نت سورس 👻" <info@netsource.ir>', // sender address
+      to: `${newPasswordReset.email}`, // list of receivers
+      subject: "بازبابی رمز عبور", // Subject line
+      html: `<h2>
+              بازیابی رمز
+             </h2>
+             <p>برای بازیابی رمز بر روی لینک زیر کلیک کنید</p>
+             <a href="${config.site_url}/auth/password/reset/${newPasswordReset.token}">
+               بازیابی
+             </a>`
+    }
+
+    mail.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        return console.log(err);
+      }
+
+      console.log("Message Sent: %s", info.messageId);
+
+      this.alert(req,{
+        title: 'دقت کنید',
+        message: 'ایمیل حاوی لینک بازیابی رمز به ایمیل شما ارسال شد',
+        type: 'success'
+      });
+
+      return res.redirect('/');
+    });
+
     //req.flash('success', 'ایمیل بازیابی رمز عبور با موفقیت ارسال شد');
     res.redirect('/');
   }

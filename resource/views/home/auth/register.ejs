@@ -11,6 +11,9 @@
                       id="register-form"
                       action="/auth/register" novalidate>
 
+                    <input type="hidden" name="_csrf"
+                           value="<%= req.csrfToken() %>">
+
                     <%- include(viewPath('layouts/error-messages')) -%>
 
                     <div class="form-group">

@@ -8,6 +8,7 @@ const mongoosePaginate =
 
 const userSchema = Schema({
   name: {type: String, required: true},
+  active: {type: Boolean, default: false},
   admin: {type: Boolean, default: 0},
   email: {type: String, unique: true, required: true},
   password: {type: String, required: true},
@@ -22,13 +23,13 @@ const userSchema = Schema({
 });
 
 userSchema.pre('save', function (next) {
-  let salt = bcrypt.genSaltSync(15);
+  let salt = bcrypt.genSaltSync(8);
   this.password = bcrypt.hashSync(this.password, salt);
   next();
 });
 
 userSchema.pre('findOneAndUpdate', function (next) {
-  let salt = bcrypt.genSaltSync(15);
+  let salt = bcrypt.genSaltSync(8);
   let password = this.getUpdate().$set.password;
   this.getUpdate().$set.password = bcrypt.hashSync(password, salt);
   next();

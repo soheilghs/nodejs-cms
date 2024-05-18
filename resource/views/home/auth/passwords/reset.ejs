@@ -10,6 +10,9 @@
                 <form class="form-horizontal" role="form"
                       method="POST" action="/auth/password/reset" novalidate>
 
+                    <input type="hidden" name="_csrf"
+                           value="<%= req.csrfToken() %>">
+
                     <%- include(viewPath('layouts/error-messages')) -%>
 
                     <input type="hidden" name="token" value="<%= token %>">
